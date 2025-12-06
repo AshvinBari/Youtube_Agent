@@ -1,7 +1,7 @@
 
 import streamlit as st
 from tavily import TavilyClient
-import re
+
 from urllib.parse import urlparse, parse_qs
 
 # -----------------------------------------

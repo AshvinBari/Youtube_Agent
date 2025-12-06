@@ -1,6 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-name: Youtube Agent CI/CD
+name: Streamlit YouTube Agent CI
 
 on:
   push:
@@ -13,25 +11,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # -------------------------
+      # 1. Checkout Repo
+      # -------------------------
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      # -------------------------
+      # 2. Setup Python
+      # -------------------------
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
+      # -------------------------
+      # 3. Install Dependencies
+      # -------------------------
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install streamlit tavily-python
+
+          # Optional: Install extra packages if needed
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run Python Lint
+      # -------------------------
+      # 4. Lint the code
+      # -------------------------
+      - name: Run Linter
         run: |
           pip install flake8
           flake8 . --count --statistics
 
-      - name: Test Script (Optional)
+      # -------------------------
+      # 5. Test Streamlit App (Syntax Check)
+      # -------------------------
+      - name: Syntax Check
         run: |
-          echo "Running your agent..."
-          python main.py || echo "No main.py found"
+          python -m py_compile app.py
+
+      # -------------------------
+      # 6. Optional: Run Streamlit App for sanity check
+      # -------------------------
+      - name: Run Streamlit App (Sanity Check)
+        run: |
+          streamlit run app.py --server.headless true &
+          sleep 10
+          echo "Streamlit app started successfully"

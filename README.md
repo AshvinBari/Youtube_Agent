@@ -28,7 +28,8 @@
 
 1. **Clone the Repository** (if applicable) or download the source code.
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/AshvinBari/Youtube_Agent.git
+
    cd YouTube
    ```
 
